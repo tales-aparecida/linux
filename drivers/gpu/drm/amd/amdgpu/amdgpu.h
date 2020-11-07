@@ -106,6 +106,7 @@
 #include "amdgpu_mmhub.h"
 #include "amdgpu_gfxhub.h"
 #include "amdgpu_df.h"
+#include "amdgpu_smuio.h"
 
 #define MAX_GPU_INSTANCE		16
 
@@ -922,6 +923,9 @@ struct amdgpu_device {
 
 	/* nbio */
 	struct amdgpu_nbio		nbio;
+
+	/* smuio */
+	struct amdgpu_smuio		smuio;
 
 	/* mmhub */
 	struct amdgpu_mmhub		mmhub;
