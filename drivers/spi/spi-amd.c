@@ -251,7 +251,7 @@ static inline int amd_spi_fifo_xfer(struct amd_spi *amd_spi,
 			amd_spi_clear_fifo_ptr(master);
 			/* Execute command */
 			if (amd_spi->ctrl_id) {
-				pr_info("amd_spi_fifo_xfer always setup the rx
+				pr_info("amd_spi_fifo_xfer always setup the rx \
 					opcode as 0x0A for MCU:rx_len:%d\n", rx_len);
 				cmd_opcode = 0x0A;
 				amd_spi_set_opcode(master, cmd_opcode);
