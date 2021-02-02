@@ -989,6 +989,10 @@ static int amdgpu_info_ioctl(struct drm_device *dev, void *data, struct drm_file
 		struct drm_amdgpu_info_video_caps *caps;
 		int r;
 
+	        caps = kzalloc(sizeof(*caps), GFP_KERNEL);
+		if (!caps)
+			return -ENOMEM;
+
 		switch (info->video_cap.type) {
 		case AMDGPU_INFO_VIDEO_CAPS_DECODE:
 			r = amdgpu_asic_query_video_codecs(adev, false, &codecs);
@@ -1006,11 +1010,6 @@ static int amdgpu_info_ioctl(struct drm_device *dev, void *data, struct drm_file
 				      info->video_cap.type);
 			return -EINVAL;
 		}
-
-		caps = kzalloc(sizeof(*caps), GFP_KERNEL);
-		if (!caps)
-			return -ENOMEM;
-
 		for (i = 0; i < codecs->codec_count; i++) {
 			int idx = codecs->codec_array[i].codec_type;
 
