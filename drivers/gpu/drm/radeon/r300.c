@@ -1326,12 +1326,8 @@ void r300_set_reg_safe(struct radeon_device *rdev)
 void r300_mc_program(struct radeon_device *rdev)
 {
 	struct r100_mc_save save;
-	int r;
 
-	r = r100_debugfs_mc_info_init(rdev);
-	if (r) {
-		dev_err(rdev->dev, "Failed to create r100_mc debugfs file.\n");
-	}
+	r100_debugfs_mc_info_init(rdev);
 
 	/* Stops all mc clients */
 	r100_mc_stop(rdev, &save);
