@@ -54,15 +54,19 @@ struct vkms_plane {
  * vkms_crtc_state - Driver specific CRTC state
  * @base: base CRTC state
  * @composer_work: work struct to compose and add CRC entries
- * @n_frame_start: start frame number for computed CRC
- * @n_frame_end: end frame number for computed CRC
+ * @num_active_planes: number of visible planes in the CRTC state
+ * @active_planes: stack of active planes for crc computation, should be in z order
+ * @active_writeback: holds the output mappings addresses while the writeback job is active
+ * @crc_pending: track if there's a CRC work in progress
+ * @wb_pending: track if there's a writeback work in progress
+ * @frame_start: start frame number for computed CRC
+ * @frame_end: end frame number for computed CRC
  */
 struct vkms_crtc_state {
 	struct drm_crtc_state base;
 	struct work_struct composer_work;
 
 	int num_active_planes;
-	/* stack of active planes for crc computation, should be in z order */
 	struct vkms_plane_state **active_planes;
 	struct vkms_writeback_job *active_writeback;
 
