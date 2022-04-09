@@ -22,6 +22,11 @@
 
 #define NUM_OVERLAY_PLANES 8
 
+/**
+ * struct vkms_writeback_job - holds the output mappings addresses while the writeback job is active
+ * @map: mapping's address for each buffer object
+ * @data: data address for each buffer object, can be %NULL
+ */
 struct vkms_writeback_job {
 	struct iosys_map map[DRM_FORMAT_MAX_PLANES];
 	struct iosys_map data[DRM_FORMAT_MAX_PLANES];
