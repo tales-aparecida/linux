@@ -128,6 +128,9 @@ struct vkms_config {
 	struct vkms_device *dev;
 };
 
+/**
+ * struct vkms_device - Driver specific container for DRM device
+ */
 struct vkms_device {
 	struct drm_device drm;
 	struct platform_device *platform;
