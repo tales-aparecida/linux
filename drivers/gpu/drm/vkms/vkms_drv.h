@@ -99,6 +99,16 @@ struct vkms_output {
 
 struct vkms_device;
 
+/**
+ * struct vkms_config - Configuration for each device instance.
+ * @writeback: enable/disable a writeback connector
+ * @cursor: enable/disable the cursor plane
+ * @overlay: when enabled, adds %NUM_OVERLAY_PLANES overlay planes
+ * @dev: reference for the device using this configs
+ *
+ * This config data is defined through module parameters and stays constant
+ * once the device is created.
+ */
 struct vkms_config {
 	bool writeback;
 	bool cursor;
