@@ -191,6 +191,7 @@ static int vkms_crtc_atomic_check(struct drm_crtc *crtc,
 	if (ret < 0)
 		return ret;
 
+	/* Count how many planes are visible in the crtc_state */
 	drm_for_each_plane_mask(plane, crtc->dev, crtc_state->plane_mask) {
 		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state,
 								  plane);
@@ -202,11 +203,13 @@ static int vkms_crtc_atomic_check(struct drm_crtc *crtc,
 		i++;
 	}
 
+	/* Alloc active_planes stack */
 	vkms_state->active_planes = kcalloc(i, sizeof(plane), GFP_KERNEL);
 	if (!vkms_state->active_planes)
 		return -ENOMEM;
 	vkms_state->num_active_planes = i;
 
+	/* Fill active_planes stack */
 	i = 0;
 	drm_for_each_plane_mask(plane, crtc->dev, crtc_state->plane_mask) {
 		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state,

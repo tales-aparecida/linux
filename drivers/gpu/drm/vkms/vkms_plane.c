@@ -158,6 +158,12 @@ static const struct drm_plane_helper_funcs vkms_primary_helper_funcs = {
 	DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
 };
 
+/**
+ * vkms_plane_init - Initialize a plane of the given type with a single compatible crtc
+ * @vkmsdev: device that will manage the plane allocation
+ * @type: See enum drm_plane_type for possible values
+ * @index: bit-array index to use as &drm_plane.possible_crtcs
+ */
 struct vkms_plane *vkms_plane_init(struct vkms_device *vkmsdev,
 				   enum drm_plane_type type, int index)
 {

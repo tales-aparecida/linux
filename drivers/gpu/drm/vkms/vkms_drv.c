@@ -39,6 +39,9 @@
 
 static struct vkms_config *default_config;
 
+/**
+ * Configs used when instantiating _the_ device
+ */
 static bool enable_cursor = true;
 module_param_named(enable_cursor, enable_cursor, bool, 0444);
 MODULE_PARM_DESC(enable_cursor, "Enable/Disable cursor support");
@@ -51,8 +54,14 @@ static bool enable_overlay;
 module_param_named(enable_overlay, enable_overlay, bool, 0444);
 MODULE_PARM_DESC(enable_overlay, "Enable/Disable overlay support");
 
+/*
+ * DRM driver stuff
+ */
 DEFINE_DRM_GEM_FOPS(vkms_driver_fops);
 
+/*
+ * DRM driver stuff
+ */
 static void vkms_release(struct drm_device *dev)
 {
 	struct vkms_device *vkms = drm_device_to_vkms_device(dev);
@@ -89,6 +98,9 @@ static void vkms_atomic_commit_tail(struct drm_atomic_state *old_state)
 	drm_atomic_helper_cleanup_planes(dev, old_state);
 }
 
+/*
+ * DebugFS stuff
+ */
 static int vkms_config_show(struct seq_file *m, void *data)
 {
 	struct drm_info_node *node = (struct drm_info_node *)m->private;
@@ -102,16 +114,25 @@ static int vkms_config_show(struct seq_file *m, void *data)
 	return 0;
 }
 
+/*
+ * DebugFS stuff
+ */
 static const struct drm_info_list vkms_config_debugfs_list[] = {
 	{ "vkms_config", vkms_config_show, 0 },
 };
 
+/*
+ * DebugFS stuff
+ */
 static void vkms_config_debugfs_init(struct drm_minor *minor)
 {
 	drm_debugfs_create_files(vkms_config_debugfs_list, ARRAY_SIZE(vkms_config_debugfs_list),
 				 minor->debugfs_root, minor);
 }
 
+/*
+ * DRM driver stuff
+ */
 static const struct drm_driver vkms_driver = {
 	.driver_features	= DRIVER_MODESET | DRIVER_ATOMIC | DRIVER_GEM,
 	.release		= vkms_release,
@@ -127,16 +148,26 @@ static const struct drm_driver vkms_driver = {
 	.minor			= DRIVER_MINOR,
 };
 
+/**
+ * Auxiliary struct value used in `vkms_modeset_init`
+ */
 static const struct drm_mode_config_funcs vkms_mode_funcs = {
 	.fb_create = drm_gem_fb_create,
 	.atomic_check = drm_atomic_helper_check,
 	.atomic_commit = drm_atomic_helper_commit,
 };
 
+/**
+ * Auxiliary struct value used in `vkms_modeset_init`
+ */
 static const struct drm_mode_config_helper_funcs vkms_mode_config_helpers = {
 	.atomic_commit_tail = vkms_atomic_commit_tail,
 };
 
+/**
+ * Set default mode_config for the given vkms_device then initialize its
+ * &vkms_device.output, which means every plane.
+ */
 static int vkms_modeset_init(struct vkms_device *vkmsdev)
 {
 	struct drm_device *dev = &vkmsdev->drm;
@@ -158,6 +189,9 @@ static int vkms_modeset_init(struct vkms_device *vkmsdev)
 	return vkms_output_init(vkmsdev, 0);
 }
 
+/**
+ * Initialize a device using the parameters from the given config.
+ */
 static int vkms_create(struct vkms_config *config)
 {
 	int ret;
@@ -173,6 +207,7 @@ static int vkms_create(struct vkms_config *config)
 		goto out_unregister;
 	}
 
+	/* Allocate and initialize the DRM device into the driver-specific struct */
 	vkms_device = devm_drm_dev_alloc(&pdev->dev, &vkms_driver,
 					 struct vkms_device, drm);
 	if (IS_ERR(vkms_device)) {
@@ -197,6 +232,8 @@ static int vkms_create(struct vkms_config *config)
 		goto out_devres;
 	}
 
+	/* initialize &vkmsdev->drm->mode_config and &vkms_device.output,
+	which includes plpanes */
 	ret = vkms_modeset_init(vkms_device);
 	if (ret)
 		goto out_devres;
@@ -216,6 +253,9 @@ out_unregister:
 	return ret;
 }
 
+/**
+ * Initialize module with a single device
+ */
 static int __init vkms_init(void)
 {
 	struct vkms_config *config;

@@ -47,6 +47,11 @@ static int vkms_add_overlay_plane(struct vkms_device *vkmsdev, int index,
 	return 0;
 }
 
+/**
+ * vkms_output_init - initialize planes, connectors and encoders
+ * @vkmsdev: VKMS device to host the initialized objects
+ * @index: bit-array index to use as &drm_plane.possible_crtcs
+ */
 int vkms_output_init(struct vkms_device *vkmsdev, int index)
 {
 	struct vkms_output *output = &vkmsdev->output;
@@ -59,10 +64,12 @@ int vkms_output_init(struct vkms_device *vkmsdev, int index)
 	int writeback;
 	unsigned int n;
 
+	/* Initialize the primary plane */
 	primary = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_PRIMARY, index);
 	if (IS_ERR(primary))
 		return PTR_ERR(primary);
 
+	/* Initialize the overlay planes, if enabled */
 	if (vkmsdev->config->overlay) {
 		for (n = 0; n < NUM_OVERLAY_PLANES; n++) {
 			ret = vkms_add_overlay_plane(vkmsdev, index, crtc);
@@ -71,16 +78,19 @@ int vkms_output_init(struct vkms_device *vkmsdev, int index)
 		}
 	}
 
+	/* Initialize the cursor plane, if enabled */
 	if (vkmsdev->config->cursor) {
 		cursor = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_CURSOR, index);
 		if (IS_ERR(cursor))
 			return PTR_ERR(cursor);
 	}
 
+	/* Initialize the CRTC (only one CRTC was initialized at vkms_create()) */
 	ret = vkms_crtc_init(dev, crtc, &primary->base, &cursor->base);
 	if (ret)
 		return ret;
 
+	/* Initialize the virtual connector */
 	ret = drm_connector_init(dev, connector, &vkms_connector_funcs,
 				 DRM_MODE_CONNECTOR_VIRTUAL);
 	if (ret) {
@@ -90,6 +100,7 @@ int vkms_output_init(struct vkms_device *vkmsdev, int index)
 
 	drm_connector_helper_add(connector, &vkms_conn_helper_funcs);
 
+	/* Initialize the encoder */
 	ret = drm_simple_encoder_init(dev, encoder, DRM_MODE_ENCODER_VIRTUAL);
 	if (ret) {
 		DRM_ERROR("Failed to init encoder\n");
@@ -97,18 +108,21 @@ int vkms_output_init(struct vkms_device *vkmsdev, int index)
 	}
 	encoder->possible_crtcs = 1;
 
+	/* Attach the virtual connector to the encoder */
 	ret = drm_connector_attach_encoder(connector, encoder);
 	if (ret) {
 		DRM_ERROR("Failed to attach connector to encoder\n");
 		goto err_attach;
 	}
 
+	/* Initialize the writeback connector, if enabled */
 	if (vkmsdev->config->writeback) {
 		writeback = vkms_enable_writeback_connector(vkmsdev);
 		if (writeback)
 			DRM_ERROR("Failed to init writeback connector\n");
 	}
 
+	/* Reset hardware and software state */
 	drm_mode_config_reset(dev);
 
 	return 0;
