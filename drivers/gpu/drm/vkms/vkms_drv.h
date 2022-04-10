@@ -32,12 +32,18 @@ struct vkms_writeback_job {
 	struct iosys_map data[DRM_FORMAT_MAX_PLANES];
 };
 
+/**
+ * struct vkms_composer - 
+ */
 struct vkms_composer {
 	struct drm_framebuffer fb;
 	struct drm_rect src, dst;
 	struct iosys_map map[4];
+	/** Offset from buffer start to the actual pixel data in bytes. Read more &drm_framebuffer.offsets */
 	unsigned int offset;
+	/** Number of bytes per line (stride). Read more &drm_framebuffer.pitches */
 	unsigned int pitch;
+	/** Number of bytes (char) per pixel. Read more &drm_format_info.cpp */
 	unsigned int cpp;
 };
 
