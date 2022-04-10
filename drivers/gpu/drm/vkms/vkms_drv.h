@@ -42,7 +42,7 @@ struct vkms_composer {
 };
 
 /**
- * vkms_plane_state - Driver specific plane state
+ * struct vkms_plane_state - Driver specific plane state
  * @base: base plane state
  * @composer: data required for composing computation
  */
