@@ -56,7 +56,7 @@ struct vkms_plane {
 };
 
 /**
- * vkms_crtc_state - Driver specific CRTC state
+ * struct vkms_crtc_state - Driver specific CRTC state
  * @base: base CRTC state
  * @composer_work: work struct to compose and add CRC entries
  * @num_active_planes: number of visible planes in the CRTC state
