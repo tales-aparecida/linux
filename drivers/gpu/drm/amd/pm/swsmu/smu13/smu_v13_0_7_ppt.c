@@ -1362,7 +1362,7 @@ static int smu_v13_0_7_get_power_profile_mode(struct smu_context *smu, char *buf
 do {													\
 	size += sysfs_emit_at(buf, size, "%-30s", #field);						\
 	for (j = 0; j <= PP_SMC_POWER_PROFILE_WINDOW3D; j++)						\
-		size += sysfs_emit_at(buf, size, "%-16d", activity_monitor_external[i].DpmActivityMonitorCoeffInt.field);		\
+		size += sysfs_emit_at(buf, size, "%-16d", activity_monitor_external[j].DpmActivityMonitorCoeffInt.field);		\
 	size += sysfs_emit_at(buf, size, "\n");								\
 } while (0)
 
