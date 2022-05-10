@@ -3459,7 +3459,7 @@ static ssize_t amdgpu_psp_vbflash_write(struct file *filp, struct kobject *kobj,
 	/* Safeguard against memory drain */
 	if (adev->psp.vbflash_image_size > AMD_VBIOS_FILE_MAX_SIZE_B) {
 		dev_err(adev->dev, "File size cannot exceed %u", AMD_VBIOS_FILE_MAX_SIZE_B);
-		vfree(adev->psp.vbflash_tmp_buf);
+		kvfree(adev->psp.vbflash_tmp_buf);
 		adev->psp.vbflash_tmp_buf = NULL;
 		adev->psp.vbflash_image_size = 0;
 		return -ENOMEM;
@@ -3467,7 +3467,7 @@ static ssize_t amdgpu_psp_vbflash_write(struct file *filp, struct kobject *kobj,
 
 	/* TODO Just allocate max for now and optimize to realloc later if needed */
 	if (!adev->psp.vbflash_tmp_buf) {
-		adev->psp.vbflash_tmp_buf = vmalloc(AMD_VBIOS_FILE_MAX_SIZE_B);
+		adev->psp.vbflash_tmp_buf = kvmalloc(AMD_VBIOS_FILE_MAX_SIZE_B, GFP_KERNEL);
 		if (!adev->psp.vbflash_tmp_buf)
 			return -ENOMEM;
 	}
@@ -3514,7 +3514,7 @@ static ssize_t amdgpu_psp_vbflash_read(struct file *filp, struct kobject *kobj,
 	amdgpu_bo_free_kernel(&fw_buf_bo, &fw_pri_mc_addr, &fw_pri_cpu_addr);
 
 rel_buf:
-	vfree(adev->psp.vbflash_tmp_buf);
+	kvfree(adev->psp.vbflash_tmp_buf);
 	adev->psp.vbflash_tmp_buf = NULL;
 	adev->psp.vbflash_image_size = 0;
 
