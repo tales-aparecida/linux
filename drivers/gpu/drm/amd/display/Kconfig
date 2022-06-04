@@ -53,5 +53,6 @@ config DRM_AMD_SECURE_DISPLAY
             of crc of specific region via debugfs.
             Cooperate with specific DMCU FW.
 
+source "drivers/gpu/drm/amd/display/amdgpu_dm/tests/Kconfig"
 
 endmenu

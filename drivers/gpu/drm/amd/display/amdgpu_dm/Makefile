@@ -24,6 +24,11 @@
 # It provides the control and status of dm blocks.
 
 
+AMDGPU_DM_LIBS = tests
+
+AMD_DM = $(addsuffix /Makefile, $(addprefix $(FULL_AMD_DISPLAY_PATH)/amdgpu_dm/,$(AMDGPU_DM_LIBS)))
+
+include $(AMD_DM)
 
 AMDGPUDM = amdgpu_dm.o amdgpu_dm_irq.o amdgpu_dm_mst_types.o amdgpu_dm_color.o
 

@@ -749,4 +749,7 @@ int dm_atomic_get_state(struct drm_atomic_state *state,
 struct amdgpu_dm_connector *
 amdgpu_dm_find_first_crtc_matching_connector(struct drm_atomic_state *state,
 					     struct drm_crtc *crtc);
+
+void amdgpu_dml_test_init(void);
+void amdgpu_dml_test_exit(void);
 #endif /* __AMDGPU_DM_H__ */

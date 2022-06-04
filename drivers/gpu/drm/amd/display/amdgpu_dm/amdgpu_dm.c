@@ -1655,6 +1655,7 @@ static int amdgpu_dm_init(struct amdgpu_device *adev)
 		goto error;
 	}
 
+	amdgpu_dml_test_init();
 
 	DRM_DEBUG_DRIVER("KMS initialized.\n");
 
@@ -1677,6 +1678,8 @@ static int amdgpu_dm_early_fini(void *handle)
 static void amdgpu_dm_fini(struct amdgpu_device *adev)
 {
 	int i;
+
+	amdgpu_dml_test_exit();
 
 	if (adev->dm.vblank_control_workqueue) {
 		destroy_workqueue(adev->dm.vblank_control_workqueue);
