@@ -2,6 +2,18 @@
 menu "DML Unit Tests"
 	depends on DRM_AMD_DC && KUNIT=m
 
+config BW_FIXED_KUNIT_TEST
+	bool "Enable unit tests for dml/calcs/bw_fixed" if !DML_KUNIT_TEST
+	default y if DML_KUNIT_TEST
+	help
+		Enables unit tests for the dml/calcs/bw_fixed. Only useful for kernel
+		devs running KUnit.
+
+		For more information on KUnit and unit tests in general please refer to
+		the KUnit documentation in Documentation/dev-tools/kunit/.
+
+		If unsure, say N.
+
 config DISPLAY_MODE_LIB_KUNIT_TEST
 	bool "Enable unit tests for dml/display_mode_lib" if !DML_KUNIT_TEST
 	default y if DML_KUNIT_TEST

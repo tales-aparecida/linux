@@ -13,10 +13,12 @@
  */
 void amdgpu_dml_test_init(void)
 {
+	bw_fixed_test_init();
 	display_mode_lib_test_init();
 }
 
 void amdgpu_dml_test_exit(void)
 {
 	display_mode_lib_test_exit();
+	bw_fixed_test_exit();
 }

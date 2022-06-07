@@ -2,6 +2,14 @@
 #ifndef DML_TEST_H_
 #define DML_TEST_H_
 
+#if defined (CONFIG_BW_FIXED_KUNIT_TEST)
+int bw_fixed_test_init(void);
+void bw_fixed_test_exit(void);
+#else
+static inline int bw_fixed_test_init(void) { return 0; }
+static inline void bw_fixed_test_exit(void) { }
+#endif
+
 #if defined (CONFIG_DISPLAY_MODE_LIB_KUNIT_TEST)
 int display_mode_lib_test_init(void);
 void display_mode_lib_test_exit(void);

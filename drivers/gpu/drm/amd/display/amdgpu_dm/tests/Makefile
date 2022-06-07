@@ -5,6 +5,10 @@
 
 DML_TESTS = dml_test.o
 
+ifdef CONFIG_BW_FIXED_KUNIT_TEST
+DML_TESTS += calcs/bw_fixed_test.o
+endif
+
 ifdef CONFIG_DISPLAY_MODE_LIB_KUNIT_TEST
 DML_TESTS += display_mode_lib_test.o
 endif
