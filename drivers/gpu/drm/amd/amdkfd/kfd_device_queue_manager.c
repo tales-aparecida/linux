@@ -866,10 +866,8 @@ static int update_queue(struct device_queue_manager *dqm, struct queue *q,
 	 * dqm->active_queue_count to determine whether a new runlist must be
 	 * uploaded.
 	 */
-	if (q->properties.is_active) {
-		add_queue = true;
-		if (!prev_active)
-			increment_queue_count(dqm, &pdd->qpd, q);
+	if (q->properties.is_active && !prev_active) {
+		increment_queue_count(dqm, &pdd->qpd, q);
 	} else if (!q->properties.is_active && prev_active) {
 		decrement_queue_count(dqm, &pdd->qpd, q);
 	} else if (q->gws && !q->properties.is_gws) {
