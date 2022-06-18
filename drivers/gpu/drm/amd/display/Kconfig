@@ -54,5 +54,6 @@ config DRM_AMD_SECURE_DISPLAY
             Cooperate with specific DMCU FW.
 
 source "drivers/gpu/drm/amd/display/amdgpu_dm/tests/Kconfig"
+source "drivers/gpu/drm/amd/display/dc/Kconfig"
 
 endmenu

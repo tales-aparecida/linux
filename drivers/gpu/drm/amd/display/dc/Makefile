@@ -57,6 +57,8 @@ ifdef CONFIG_DRM_AMD_DC_HDCP
 DC_LIBS += hdcp
 endif
 
+DC_LIBS += tests
+
 AMD_DC = $(addsuffix /Makefile, $(addprefix $(FULL_AMD_DISPLAY_PATH)/dc/,$(DC_LIBS)))
 
 include $(AMD_DC)
