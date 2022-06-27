@@ -48,7 +48,7 @@ struct convert_xrgb8888_case {
 	unsigned int pitch;
 	struct drm_rect clip;
 	const u32 xrgb8888[TEST_BUF_SIZE];
-	struct convert_xrgb8888_result results[1];
+	struct convert_xrgb8888_result results[3];
 };
 
 static struct convert_xrgb8888_case convert_xrgb8888_cases[] = {
@@ -63,6 +63,26 @@ static struct convert_xrgb8888_case convert_xrgb8888_cases[] = {
 				.conv = { .func = drm_fb_xrgb8888_to_rgb332 },
 				.dst_pitch = 0,
 				.expected = { 0xE0 },
+			},
+			{
+				.dst_format = DRM_FORMAT_RGB565,
+				.has_swab = true,
+				.conv_swab = {
+					.func = drm_fb_xrgb8888_to_rgb565,
+					.swab = false,
+				},
+				.dst_pitch = 0,
+				.expected = { 0x00, 0xF8 },
+			},
+			{
+				.dst_format = DRM_FORMAT_RGB565,
+				.has_swab = true,
+				.conv_swab = {
+					.func = drm_fb_xrgb8888_to_rgb565,
+					.swab = true,
+				},
+				.dst_pitch = 0,
+				.expected = { 0xF8, 0x00 },
 			},
 		},
 	},
@@ -80,6 +100,26 @@ static struct convert_xrgb8888_case convert_xrgb8888_cases[] = {
 				.conv = { .func = drm_fb_xrgb8888_to_rgb332 },
 				.dst_pitch = 0,
 				.expected = { 0xE0 },
+			},
+			{
+				.dst_format = DRM_FORMAT_RGB565,
+				.has_swab = true,
+				.conv_swab = {
+					.func = drm_fb_xrgb8888_to_rgb565,
+					.swab = false,
+				},
+				.dst_pitch = 0,
+				.expected = { 0x00, 0xF8 },
+			},
+			{
+				.dst_format = DRM_FORMAT_RGB565,
+				.has_swab = true,
+				.conv_swab = {
+					.func = drm_fb_xrgb8888_to_rgb565,
+					.swab = true,
+				},
+				.dst_pitch = 0,
+				.expected = { 0xF8, 0x00 },
 			},
 		},
 	},
@@ -110,6 +150,36 @@ static struct convert_xrgb8888_case convert_xrgb8888_cases[] = {
 					0xFC, 0x1F,
 				},
 			},
+			{
+				.dst_format = DRM_FORMAT_RGB565,
+				.has_swab = true,
+				.conv_swab = {
+					.func = drm_fb_xrgb8888_to_rgb565,
+					.swab = false,
+				},
+				.dst_pitch = 0,
+				.expected = {
+					0xFF, 0xFF, 0x00, 0x00,
+					0x00, 0xF8, 0xE0, 0x07,
+					0x1F, 0x00, 0x1F, 0xF8,
+					0xE0, 0xFF, 0xFF, 0x07,
+				},
+			},
+			{
+				.dst_format = DRM_FORMAT_RGB565,
+				.has_swab = true,
+				.conv_swab = {
+					.func = drm_fb_xrgb8888_to_rgb565,
+					.swab = true,
+				},
+				.dst_pitch = 0,
+				.expected = {
+					0xFF, 0xFF, 0x00, 0x00,
+					0xF8, 0x00, 0x07, 0xE0,
+					0x00, 0x1F, 0xF8, 0x1F,
+					0xFF, 0xE0, 0x07, 0xFF,
+				},
+			},
 		},
 	},
 	{
@@ -131,6 +201,34 @@ static struct convert_xrgb8888_case convert_xrgb8888_cases[] = {
 					0x0A, 0x08, 0xA0, 0x00, 0x00,
 					0x6D, 0x0A, 0x08, 0x00, 0x00,
 					0xA0, 0x6D, 0x0A, 0x00, 0x00,
+				},
+			},
+			{
+				.dst_format = DRM_FORMAT_RGB565,
+				.has_swab = true,
+				.conv_swab = {
+					.func = drm_fb_xrgb8888_to_rgb565,
+					.swab = false,
+				},
+				.dst_pitch = 10,
+				.expected = {
+					0x33, 0x0A, 0x60, 0x12, 0x00, 0xA8, 0x00, 0x00, 0x00, 0x00,
+					0x8E, 0x6B, 0x33, 0x0A, 0x60, 0x12, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0xA8, 0x8E, 0x6B, 0x33, 0x0A, 0x00, 0x00, 0x00, 0x00,
+				},
+			},
+			{
+				.dst_format = DRM_FORMAT_RGB565,
+				.has_swab = true,
+				.conv_swab = {
+					.func = drm_fb_xrgb8888_to_rgb565,
+					.swab = true,
+				},
+				.dst_pitch = 10,
+				.expected = {
+					0x0A, 0x33, 0x12, 0x60, 0xA8, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x6B, 0x8E, 0x0A, 0x33, 0x12, 0x60, 0x00, 0x00, 0x00, 0x00,
+					0xA8, 0x00, 0x6B, 0x8E, 0x0A, 0x33, 0x00, 0x00, 0x00, 0x00,
 				},
 			},
 		},
