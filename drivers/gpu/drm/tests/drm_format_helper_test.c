@@ -16,34 +16,55 @@
 
 #define TEST_BUF_SIZE 50
 
+struct convert_xrgb8888_result {
+	u32 dst_format;
+	void (*conv_func)(void *dst, unsigned int dst_pitch,
+			  const void *src,
+			  const struct drm_framebuffer *fb,
+			  const struct drm_rect *clip);
+	unsigned int dst_pitch;
+	const u8 expected[4 * TEST_BUF_SIZE];
+};
+
 struct convert_xrgb8888_case {
 	const char *name;
 	unsigned int pitch;
-	unsigned int dst_pitch;
 	struct drm_rect clip;
 	const u32 xrgb8888[TEST_BUF_SIZE];
-	const u8 expected[4 * TEST_BUF_SIZE];
+	struct convert_xrgb8888_result results[1];
 };
 
 static struct convert_xrgb8888_case convert_xrgb8888_cases[] = {
 	{
 		.name = "single_pixel_source_buffer",
 		.pitch = 1 * 4,
-		.dst_pitch = 0,
 		.clip = DRM_RECT_INIT(0, 0, 1, 1),
 		.xrgb8888 = { 0x01FF0000 },
-		.expected = { 0xE0 },
+		.results = {
+			{
+				.dst_format = DRM_FORMAT_RGB332,
+				.conv_func = drm_fb_xrgb8888_to_rgb332,
+				.dst_pitch = 0,
+				.expected = { 0xE0 },
+			},
+		},
 	},
 	{
 		.name = "single_pixel_clip_rectangle",
 		.pitch = 2 * 4,
-		.dst_pitch = 0,
 		.clip = DRM_RECT_INIT(1, 1, 1, 1),
 		.xrgb8888 = {
 			0x00000000, 0x00000000,
 			0x00000000, 0x10FF0000,
 		},
-		.expected = { 0xE0 },
+		.results = {
+			{
+				.dst_format = DRM_FORMAT_RGB332,
+				.conv_func = drm_fb_xrgb8888_to_rgb332,
+				.dst_pitch = 0,
+				.expected = { 0xE0 },
+			},
+		},
 	},
 	{
 		/* Well known colors: White, black, red, green, blue, magenta,
@@ -52,7 +73,6 @@ static struct convert_xrgb8888_case convert_xrgb8888_cases[] = {
 		 */
 		.name = "well_known_colors",
 		.pitch = 4 * 4,
-		.dst_pitch = 0,
 		.clip = DRM_RECT_INIT(1, 1, 2, 4),
 		.xrgb8888 = {
 			0x00000000, 0x00000000, 0x00000000, 0x00000000,
@@ -61,28 +81,41 @@ static struct convert_xrgb8888_case convert_xrgb8888_cases[] = {
 			0x00000000, 0x550000FF, 0x66FF00FF, 0x00000000,
 			0x00000000, 0x77FFFF00, 0x8800FFFF, 0x00000000,
 		},
-		.expected = {
-			0xFF, 0x00,
-			0xE0, 0x1C,
-			0x03, 0xE3,
-			0xFC, 0x1F,
+		.results = {
+			{
+				.dst_format = DRM_FORMAT_RGB332,
+				.conv_func = drm_fb_xrgb8888_to_rgb332,
+				.dst_pitch = 0,
+				.expected = {
+					0xFF, 0x00,
+					0xE0, 0x1C,
+					0x03, 0xE3,
+					0xFC, 0x1F,
+				},
+			},
 		},
 	},
 	{
 		/* Randomly picked colors. Full buffer within the clip area. */
 		.name = "destination_pitch",
 		.pitch = 3 * 4,
-		.dst_pitch = 5,
 		.clip = DRM_RECT_INIT(0, 0, 3, 3),
 		.xrgb8888 = {
 			0xA10E449C, 0xB1114D05, 0xC1A80303,
 			0xD16C7073, 0xA20E449C, 0xB2114D05,
 			0xC2A80303, 0xD26C7073, 0xA30E449C,
 		},
-		.expected = {
-			0x0A, 0x08, 0xA0, 0x00, 0x00,
-			0x6D, 0x0A, 0x08, 0x00, 0x00,
-			0xA0, 0x6D, 0x0A, 0x00, 0x00,
+		.results = {
+			{
+				.dst_format = DRM_FORMAT_RGB332,
+				.conv_func = drm_fb_xrgb8888_to_rgb332,
+				.dst_pitch = 5,
+				.expected = {
+					0x0A, 0x08, 0xA0, 0x00, 0x00,
+					0x6D, 0x0A, 0x08, 0x00, 0x00,
+					0xA0, 0x6D, 0x0A, 0x00, 0x00,
+				},
+			},
 		},
 	},
 };
@@ -123,24 +156,31 @@ KUNIT_ARRAY_PARAM(convert_xrgb8888, convert_xrgb8888_cases,
 static void convert_xrgb8888_test(struct kunit *test)
 {
 	const struct convert_xrgb8888_case *params = test->param_value;
+	const struct convert_xrgb8888_result *result;
 	size_t dst_size;
 	__u8 *dst = NULL;
+	int n;
 
 	struct drm_framebuffer fb = {
 		.format = drm_format_info(DRM_FORMAT_XRGB8888),
 		.pitches = { params->pitch, 0, 0 },
 	};
 
-	dst_size = conversion_buf_size(DRM_FORMAT_RGB332, params->dst_pitch,
-				       &params->clip);
-	KUNIT_ASSERT_GT(test, dst_size, 0);
+	for (n = 0; n < ARRAY_SIZE(params->results); n++) {
+		result = &params->results[n];
 
-	dst = kunit_kzalloc(test, dst_size, GFP_KERNEL);
-	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, dst);
+		dst_size = conversion_buf_size(result->dst_format,
+					       result->dst_pitch,
+					       &params->clip);
+		KUNIT_ASSERT_GT(test, dst_size, 0);
 
-	drm_fb_xrgb8888_to_rgb332(dst, params->dst_pitch, params->xrgb8888,
+		dst = kunit_kzalloc(test, dst_size, GFP_KERNEL);
+		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, dst);
+
+		result->conv_func(dst, result->dst_pitch, params->xrgb8888,
 				  &fb, &params->clip);
-	KUNIT_EXPECT_EQ(test, memcmp(dst, params->expected, dst_size), 0);
+		KUNIT_EXPECT_EQ(test, memcmp(dst, result->expected, dst_size), 0);
+	}
 }
 
 static struct kunit_case drm_format_helper_test_cases[] = {
