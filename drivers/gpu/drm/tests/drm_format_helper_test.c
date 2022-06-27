@@ -16,12 +16,29 @@
 
 #define TEST_BUF_SIZE 50
 
+struct convert_xrgb8888_func {
+	void (*func)(void *dst, unsigned int dst_pitch,
+		     const void *src,
+		     const struct drm_framebuffer *fb,
+		     const struct drm_rect *clip);
+};
+
+struct convert_xrgb8888_func_swab {
+	void (*func)(void *dst, unsigned int dst_pitch,
+		     const void *src,
+		     const struct drm_framebuffer *fb,
+		     const struct drm_rect *clip,
+		     bool swab);
+	bool swab;
+};
+
 struct convert_xrgb8888_result {
 	u32 dst_format;
-	void (*conv_func)(void *dst, unsigned int dst_pitch,
-			  const void *src,
-			  const struct drm_framebuffer *fb,
-			  const struct drm_rect *clip);
+	bool has_swab;
+	union {
+		struct convert_xrgb8888_func conv;
+		struct convert_xrgb8888_func_swab conv_swab;
+	};
 	unsigned int dst_pitch;
 	const u8 expected[4 * TEST_BUF_SIZE];
 };
@@ -43,7 +60,7 @@ static struct convert_xrgb8888_case convert_xrgb8888_cases[] = {
 		.results = {
 			{
 				.dst_format = DRM_FORMAT_RGB332,
-				.conv_func = drm_fb_xrgb8888_to_rgb332,
+				.conv = { .func = drm_fb_xrgb8888_to_rgb332 },
 				.dst_pitch = 0,
 				.expected = { 0xE0 },
 			},
@@ -60,7 +77,7 @@ static struct convert_xrgb8888_case convert_xrgb8888_cases[] = {
 		.results = {
 			{
 				.dst_format = DRM_FORMAT_RGB332,
-				.conv_func = drm_fb_xrgb8888_to_rgb332,
+				.conv = { .func = drm_fb_xrgb8888_to_rgb332 },
 				.dst_pitch = 0,
 				.expected = { 0xE0 },
 			},
@@ -84,7 +101,7 @@ static struct convert_xrgb8888_case convert_xrgb8888_cases[] = {
 		.results = {
 			{
 				.dst_format = DRM_FORMAT_RGB332,
-				.conv_func = drm_fb_xrgb8888_to_rgb332,
+				.conv = { .func = drm_fb_xrgb8888_to_rgb332 },
 				.dst_pitch = 0,
 				.expected = {
 					0xFF, 0x00,
@@ -108,7 +125,7 @@ static struct convert_xrgb8888_case convert_xrgb8888_cases[] = {
 		.results = {
 			{
 				.dst_format = DRM_FORMAT_RGB332,
-				.conv_func = drm_fb_xrgb8888_to_rgb332,
+				.conv = { .func = drm_fb_xrgb8888_to_rgb332 },
 				.dst_pitch = 5,
 				.expected = {
 					0x0A, 0x08, 0xA0, 0x00, 0x00,
@@ -177,8 +194,15 @@ static void convert_xrgb8888_test(struct kunit *test)
 		dst = kunit_kzalloc(test, dst_size, GFP_KERNEL);
 		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, dst);
 
-		result->conv_func(dst, result->dst_pitch, params->xrgb8888,
-				  &fb, &params->clip);
+		if (result->has_swab) {
+			result->conv_swab.func(dst, result->dst_pitch,
+					       params->xrgb8888, &fb,
+					       &params->clip,
+					       result->conv_swab.swab);
+		} else {
+			result->conv.func(dst, result->dst_pitch,
+					  params->xrgb8888, &fb, &params->clip);
+		}
 		KUNIT_EXPECT_EQ(test, memcmp(dst, result->expected, dst_size), 0);
 	}
 }
