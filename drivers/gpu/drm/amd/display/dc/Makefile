@@ -77,3 +77,7 @@ DC_EDID += dc_edid_parser.o
 AMD_DISPLAY_DMUB = $(addprefix $(AMDDALPATH)/dc/,$(DC_DMUB))
 AMD_DISPLAY_EDID = $(addprefix $(AMDDALPATH)/dc/,$(DC_EDID))
 AMD_DISPLAY_FILES += $(AMD_DISPLAY_DMUB) $(AMD_DISPLAY_EDID)
+
+ifdef CONFIG_DC_KUNIT_TEST
+	include $(FULL_AMD_DISPLAY_PATH)/dc/tests/Makefile
+endif
