@@ -2079,7 +2079,7 @@ static enum bp_result bios_parser_get_encoder_cap_info(
 	record = get_encoder_cap_record(bp, object);
 	if (!record)
 		return BP_RESULT_NORECORD;
-	DC_LOG_BIOS("record->encodercaps 0x%x for object_id 0x%x", record->encodercaps, object_id);
+	DC_LOG_BIOS("record->encodercaps 0x%x for object_id 0x%x", record->encodercaps, object_id.id);
 
 	info->DP_HBR2_CAP = (record->encodercaps &
 			ATOM_ENCODER_CAP_RECORD_HBR2) ? 1 : 0;
@@ -2961,10 +2961,10 @@ static enum bp_result construct_integrated_info(
 						i,
 						info->ext_disp_conn_info.path[i].device_tag,
 						info->ext_disp_conn_info.path[i].device_acpi_enum,
-						info->ext_disp_conn_info.path[i].device_connector_id,
+						info->ext_disp_conn_info.path[i].device_connector_id.id,
 						info->ext_disp_conn_info.path[i].ext_aux_ddc_lut_index,
 						info->ext_disp_conn_info.path[i].ext_hpd_pin_lut_index,
-						info->ext_disp_conn_info.path[i].ext_encoder_obj_id,
+						info->ext_disp_conn_info.path[i].ext_encoder_obj_id.id,
 						info->ext_disp_conn_info.path[i].caps
 						);
 		}
