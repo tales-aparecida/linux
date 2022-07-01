@@ -56,6 +56,44 @@ enum output_bpc_class {
 enum scan_direction_class {
 	dm_horz = 0, dm_vert = 1
 };
+
+/**
+ * enum dm_swizzle_mode - Define the swizzle mode
+ * @dm_sw_linear: Linear swizzle
+ * @dm_sw_256b_s: standard swizzle for a 256B swizzle macrotile
+ * @dm_sw_256b_d: display swizzle for a 256B swizzle macrotile
+ * @dm_sw_SPARE_0: spare value
+ * @dm_sw_SPARE_1: spare value
+ * @dm_sw_4kb_s: standard swizzle for a 4KB swizzle macrotile
+ * @dm_sw_4kb_d: display swizzle for a 4KB swizzle macrotile
+ * @dm_sw_SPARE_2: spare value
+ * @dm_sw_SPARE_3: spare value
+ * @dm_sw_64kb_s: standard swizzle for a 64KB swizzle macrotile
+ * @dm_sw_64kb_d: display swizzle for a 64KB swizzle macrotile
+ * @dm_sw_SPARE_4: spare value
+ * @dm_sw_SPARE_5: spare value
+ * @dm_sw_var_s: standard swizzle for a variable size macrotile
+ * @dm_sw_var_d: display swizzle for a variable size macrotile
+ * @dm_sw_SPARE_6: spare value
+ * @dm_sw_SPARE_7: spare value
+ * @dm_sw_64kb_s_t: standard swizzle for a 64KB swizzle macrotile with T mode
+ * @dm_sw_64kb_d_t: display swizzle for a 64KB swizzle macrotile with T mode
+ * @dm_sw_SPARE_10: spare value
+ * @dm_sw_SPARE_11: spare value
+ * @dm_sw_4kb_s_x: standard swizzle for a 4KB swizzle macrotile with XOR enabled
+ * @dm_sw_4kb_d_x: display swizzle for a 4KB swizzle macrotile with XOR enabled
+ * @dm_sw_SPARE_12: spare value
+ * @dm_sw_SPARE_13: spare value
+ * @dm_sw_64kb_s_x: standard swizzle for a 64KB swizzle macrotile with XOR enabled
+ * @dm_sw_64kb_d_x: display swizzle for a 64KB swizzle macrotile with XOR enabled
+ * @dm_sw_64kb_r_x: rotate swizzle for a 64KB swizzle macrotile with XOR enabled
+ * @dm_sw_SPARE_15: spare value
+ * @dm_sw_var_s_x: standard swizzle for a variable size macrotile with XOR enabled
+ * @dm_sw_var_d_x: display swizzle for a variable size macrotile with XOR enabled
+ * @dm_sw_var_r_x: rotate swizzle for a variable size macrotile with XOR enabled
+ * @dm_sw_gfx7_2d_thin_l_vp:
+ * @dm_sw_gfx7_2d_thin_gl:
+ */
 enum dm_swizzle_mode {
 	dm_sw_linear = 0,
 	dm_sw_256b_s = 1,
@@ -133,6 +171,13 @@ enum RequestType {
 	REQ_256Bytes, REQ_128BytesNonContiguous, REQ_128BytesContiguous, REQ_NA
 };
 
+/**
+ * enum self_refresh_affinity - Specifies DRAM self-refresh and Memory Clock (MCLK) switch
+ * @dm_try_to_allow_self_refresh_and_mclk_switch: Try to allow both
+ * @dm_allow_self_refresh_and_mclk_switch: Allow both
+ * @dm_allow_self_refresh: Allow only DRAM self-refresh
+ * @dm_neither_self_refresh_nor_mclk_switch: Allow neither
+ */
 enum self_refresh_affinity {
 	dm_try_to_allow_self_refresh_and_mclk_switch,
 	dm_allow_self_refresh_and_mclk_switch,
