@@ -4745,7 +4745,7 @@ static int gfx_v11_0_soft_reset(void *handle)
 {
 	u32 grbm_soft_reset = 0;
 	u32 tmp;
-	int i, j, k, r;
+	int i, j, k;
 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
 
 	tmp = RREG32_SOC15(GC, 0, regCP_INT_CNTL);
