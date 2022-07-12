@@ -843,7 +843,6 @@ static bool sdma_v6_0_check_soft_reset(void *handle)
 {
 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
 	struct amdgpu_ring *ring;
-	u64 wptr_gpu_addr;
 	int i, r;
 	long tmo = msecs_to_jiffies(1000);
 
