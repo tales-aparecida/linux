@@ -1445,7 +1445,7 @@ static const struct dmi_system_id hpd_disconnect_quirk_table[] = {
 	{}
 };
 
-void retrieve_dmi_info(struct amdgpu_display_manager *dm)
+static void retrieve_dmi_info(struct amdgpu_display_manager *dm)
 {
 	const struct dmi_system_id *dmi_id;
 
