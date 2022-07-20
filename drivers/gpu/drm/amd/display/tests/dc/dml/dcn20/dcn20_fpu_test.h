@@ -28,7 +28,7 @@ struct dcn21_update_bw_bounding_box_test_case {
 };
 
 extern struct dcn20_cap_soc_clocks_test_case dcn20_cap_soc_clocks_test_cases[3];
-extern struct dcn21_update_bw_bounding_box_test_case dcn21_update_bw_bounding_box_test_data[2];
+extern struct dcn21_update_bw_bounding_box_test_case dcn21_update_bw_bounding_box_test_data[1];
 
 int dcn20_fpu_dcn21_update_bw_bounding_box_test_init(struct kunit *test);
 void dcn20_fpu_dcn21_update_bw_bounding_box_test_exit(struct kunit *test);
