@@ -913,18 +913,14 @@ static void fetch_pipe_params(struct display_mode_lib *mode_lib)
 }
 
 /**
- * ********************************************************************************************
- * cache_debug_params: Cache any params that needed to be maintained from the initial validation
+ * cache_debug_params() - Cache params that are needed for debug purposes
+ * @mode_lib: mode_lib input/output of validate call
+ *
+ * Cache any params that needed to be maintained from the initial validation
  * for debug purposes.
  *
  * The DML getters can modify some of the VBA params that we are interested in (for example when
  * calculating with dummy p-state latency), so cache any params here that we want for debugging
- *
- * @param [in] mode_lib: mode_lib input/output of validate call
- *
- * @return: void
- *
- * ********************************************************************************************
  */
 static void cache_debug_params(struct display_mode_lib *mode_lib)
 {
@@ -957,6 +953,28 @@ static void recalculate_params(
 	}
 }
 
+/**
+ * Calculate256BBlockSizes() - Calculate the block width and height for Chroma Subsampling
+ * @SourcePixelFormat Encoding format
+ * @SurfaceTiling Swizzle mode
+ * @BytePerPixelY Number of bytes per pixel for Luma information
+ * @BytePerPixelC Number of bytes per pixel for Chroma information
+ * @BlockHeight256BytesY The number of bytes used in a 256-byte block to store
+ * Luma information for the height
+ * @BlockHeight256BytesC The number of bytes used in a 256-byte block to store
+ * Chroma information for the height
+ * @BlockWidth256BytesY The number of bytes used in a 256-byte block to store
+ * Luma information for the width
+ * @BlockWidth256BytesC The number of bytes used in a 256-byte block to store
+ * Chroma information for the width
+ *
+ * Considering a 256-byte block for Chroma Subsampling, it calculates the block
+ * width and height in bytes for Chroma and Luma information. In order to make
+ * this calculation, the encoding format and swizzle mode is needed and, hence,
+ * the number of bytes per pixel for Luma and Chroma.
+ *
+ * Returns true.
+ */
 void Calculate256BBlockSizes(
 		enum source_format_class SourcePixelFormat,
 		enum dm_swizzle_mode SurfaceTiling,
@@ -997,6 +1015,19 @@ void Calculate256BBlockSizes(
 	}
 }
 
+/**
+ * CalculateMinAndMaxPrefetchMode() - Calculate Prefetch Mode based on
+ * self-refresh and MCLK switch
+ * @AllowDRAMSelfRefreshOrDRAMClockChangeInVblank Specify if self-refresh and
+ * MCLK switch is allowed
+ * @MinPrefetchMode Minimum Prefetch Mode
+ * @MaxPrefetchMode Maximum Prefetch Mode
+ *
+ * Based on the allow of DRAM self-refresh and MCLK switch during VBlank, it is
+ * possible to set the min and max prefetch mode.
+ *
+ * Returns true for Prefetch Mode error. Otherwise, returns false.
+ */
 bool CalculateMinAndMaxPrefetchMode(
 		enum self_refresh_affinity AllowDRAMSelfRefreshOrDRAMClockChangeInVblank,
 		unsigned int *MinPrefetchMode,
@@ -1027,11 +1058,18 @@ bool CalculateMinAndMaxPrefetchMode(
 	return true;
 }
 
+/**
+ * PixelClockAdjustmentForProgressiveToInterlaceUnit() - Progressive to Interlace Unit Effect
+ * @mode_lib: mode_lib input/output of validate call
+ *
+ * If Progressive To Interlace Unit is enabled on OPP (Output Pixel Processing)
+ * and the plane is interlaced, the Pixel Clock must be doubled.
+ *
+ */
 void PixelClockAdjustmentForProgressiveToInterlaceUnit(struct display_mode_lib *mode_lib)
 {
 	unsigned int k;
 
-	//Progressive To Interlace Unit Effect
 	for (k = 0; k < mode_lib->vba.NumberOfActivePlanes; ++k) {
 		mode_lib->vba.PixelClockBackEnd[k] = mode_lib->vba.PixelClock[k];
 		if (mode_lib->vba.Interlace[k] == 1
