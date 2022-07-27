@@ -3,11 +3,7 @@
 # Makefile for the KUnit Tests for DML
 #
 
-ifdef CONFIG_X86
-dml_tests_ccflags := -mhard-float -msse
-endif
-
-CFLAGS_$(AMDDALPATH)/tests/dc/dml/dcn20/dcn20_fpu_test.o := $(dml_tests_ccflags)
+CFLAGS_$(AMDDALPATH)/tests/dc/dml/dcn20/dcn20_fpu_test.o := $(dml_ccflags)
 
 DML_TESTS = calcs/bw_fixed_test.o display_mode_vba_test.o \
 			dcn20/dcn20_fpu_test.o
