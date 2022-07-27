@@ -429,9 +429,12 @@ EXPORT_SYMBOL_FOR_TESTS_ONLY(dcn20_cap_soc_clocks_test);
 static struct _vcs_dpi_soc_bounding_box_st original_dcn2_1_soc;
 static struct _vcs_dpi_ip_params_st original_dcn2_1_ip;
 
+/** 
+ * dcn20_fpu_dcn21_update_bw_bounding_box_test_init - Store backup copies of DCN global structures
+ * @test: represents a running instance of a test.
+ */
 int dcn20_fpu_dcn21_update_bw_bounding_box_test_init(struct kunit *test)
 {
-	/* Store original dcn2_1_soc dcn2_1_ip and in a temporary struct */
 	memcpy(&original_dcn2_1_soc, &dcn2_1_soc, sizeof(struct _vcs_dpi_soc_bounding_box_st));
 	memcpy(&original_dcn2_1_ip, &dcn2_1_ip, sizeof(struct _vcs_dpi_ip_params_st));
 
@@ -439,9 +442,13 @@ int dcn20_fpu_dcn21_update_bw_bounding_box_test_init(struct kunit *test)
 }
 EXPORT_SYMBOL_FOR_TESTS_ONLY(dcn20_fpu_dcn21_update_bw_bounding_box_test_init);
 
+/** 
+ * dcn20_fpu_dcn21_update_bw_bounding_box_test_exit - Restore original values
+ * of DCN global structures
+ * @test: represents a running instance of a test.
+ */
 void dcn20_fpu_dcn21_update_bw_bounding_box_test_exit(struct kunit *test)
 {
-	/* Restore original dcn2_1_soc and dcn2_1_ip */
 	memcpy(&dcn2_1_soc, &original_dcn2_1_soc, sizeof(struct _vcs_dpi_soc_bounding_box_st));
 	memcpy(&dcn2_1_ip, &original_dcn2_1_ip, sizeof(struct _vcs_dpi_ip_params_st));
 }
