@@ -12,7 +12,7 @@ KUnit - Linux Kernel Unit Testing
 	architecture
 	run_wrapper
 	run_manual
-	usage
+	writing_tests
 	kunit-tool
 	api/index
 	style
@@ -104,7 +104,7 @@ How do I use it?
 *   Documentation/dev-tools/kunit/architecture.rst - KUnit architecture.
 *   Documentation/dev-tools/kunit/run_wrapper.rst - run kunit_tool.
 *   Documentation/dev-tools/kunit/run_manual.rst - run tests without kunit_tool.
-*   Documentation/dev-tools/kunit/usage.rst - write tests.
+*   Documentation/dev-tools/kunit/writing_tests.rst - write tests.
 *   Documentation/dev-tools/kunit/tips.rst - best practices with
     examples.
 *   Documentation/dev-tools/kunit/api/index.rst - KUnit APIs

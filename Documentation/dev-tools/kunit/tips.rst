@@ -186,5 +186,5 @@ Alternatively, one can take full control over the error message by using ``KUNIT
 
 Next Steps
 ==========
-*   Optional: see the Documentation/dev-tools/kunit/usage.rst page for a more
+*   Optional: see the Documentation/dev-tools/kunit/writing_tests.rst page for a more
     in-depth explanation of KUnit.
