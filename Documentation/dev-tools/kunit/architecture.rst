@@ -7,7 +7,7 @@ KUnit Architecture
 The KUnit architecture can be divided into two parts:
 
 - `In-Kernel Testing Framework`_
-- `kunit_tool (Command Line Test Harness)`_
+- `kunit_tool (Command Line Test Harness) <Run Tests with kunit_tool_>`_
 
 In-Kernel Testing Framework
 ===========================
@@ -154,42 +154,3 @@ generator function.
 The generator function is passed the previous parameter and returns the next
 parameter. It also provides a macro to generate common-case generators based on
 arrays.
-
-kunit_tool (Command Line Test Harness)
-======================================
-
-kunit_tool is a Python script ``(tools/testing/kunit/kunit.py)``
-that can be used to configure, build, exec, parse and run (runs other
-commands in order) test results. You can either run KUnit tests using
-kunit_tool or can include KUnit in kernel and parse manually.
-
-- ``configure`` command generates the kernel ``.config`` from a
-  ``.kunitconfig`` file (and any architecture-specific options).
-  For some architectures, additional config options are specified in the
-  ``qemu_config`` Python script
-  (For example: ``tools/testing/kunit/qemu_configs/powerpc.py``).
-  It parses both the existing ``.config`` and the ``.kunitconfig`` files
-  and ensures that ``.config`` is a superset of ``.kunitconfig``.
-  If this is not the case, it will combine the two and run
-  ``make olddefconfig`` to regenerate the ``.config`` file. It then
-  verifies that ``.config`` is now a superset. This checks if all
-  Kconfig dependencies are correctly specified in ``.kunitconfig``.
-  ``kunit_config.py`` includes the parsing Kconfigs code. The code which
-  runs ``make olddefconfig`` is a part of ``kunit_kernel.py``. You can
-  invoke this command via: ``./tools/testing/kunit/kunit.py config`` and
-  generate a ``.config`` file.
-- ``build`` runs ``make`` on the kernel tree with required options
-  (depends on the architecture and some options, for example: build_dir)
-  and reports any errors.
-  To build a KUnit kernel from the current ``.config``, you can use the
-  ``build`` argument: ``./tools/testing/kunit/kunit.py build``.
-- ``exec`` command executes kernel results either directly (using
-  User-mode Linux configuration), or via an emulator such
-  as QEMU. It reads results from the log via standard
-  output (stdout), and passes them to ``parse`` to be parsed.
-  If you already have built a kernel with built-in KUnit tests,
-  you can run the kernel and display the test results with the ``exec``
-  argument: ``./tools/testing/kunit/kunit.py exec``.
-- ``parse`` extracts the KTAP output from a kernel log, parses
-  the test results, and prints a summary. For failed tests, any
-  diagnostic output will be included.

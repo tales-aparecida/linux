@@ -13,7 +13,6 @@ KUnit - Linux Kernel Unit Testing
 	run_wrapper
 	run_manual
 	writing_tests
-	kunit-tool
 	api/index
 	style
 	faq
@@ -49,6 +48,8 @@ In addition, KUnit has kunit_tool, a script (``tools/testing/kunit/kunit.py``)
 that configures the Linux kernel, runs KUnit tests under QEMU or UML (`User Mode
 Linux <http://user-mode-linux.sourceforge.net/>`_), parses the test results and
 displays them in a user friendly manner.
+
+Read more :ref:`kunit-tool`.
 
 Features
 --------
@@ -109,7 +110,5 @@ How do I use it?
     examples.
 *   Documentation/dev-tools/kunit/api/index.rst - KUnit APIs
     used for testing.
-*   Documentation/dev-tools/kunit/kunit-tool.rst - kunit_tool helper
-    script.
 *   Documentation/dev-tools/kunit/faq.rst - KUnit common questions and
     answers.
