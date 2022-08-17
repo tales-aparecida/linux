@@ -58,7 +58,7 @@ To view kunit_tool flags (optional command-line arguments), run:
 
 	./tools/testing/kunit/kunit.py run --help
 
-Create a  ``.kunitconfig`` File
+Create a ``.kunitconfig`` File
 ===============================
 
 If we want to run a specific set of tests (rather than those listed
@@ -167,7 +167,7 @@ This uses the standard glob format with wildcard characters.
 
 .. _kunit-on-qemu:
 
-Run Tests on qemu
+Run Tests on QEMU
 =================
 
 kunit_tool supports running tests on  qemu as well as
