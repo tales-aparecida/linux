@@ -126,7 +126,7 @@ If you want to be more specific than Kconfig can provide, it is also possible
 to select which tests to execute at boot-time by passing a glob filter
 (read instructions regarding the pattern in the manpage :manpage:`glob(7)`).
 If there is a ``"."`` (period) in the filter, it will be interpreted as a
-separator between the name of the test-suite and the test-case,
+separator between the name of the test suite and the test case,
 otherwise, it will be interpreted as the name of the test suite.
 For example, let's assume we are using the default config:
 
@@ -140,9 +140,9 @@ b. inform the name of a test case prefixed by its test suite,
 
 	./tools/testing/kunit/kunit.py run "example.example_simple_test"
 
-c. use wildcard characters (``*?[``) to run any test-case that match the pattern,
-   like ``"*.*64*"`` to run test-cases containing ``"64"`` in the name inside
-   any test-suite::
+c. use wildcard characters (``*?[``) to run any test case that match the pattern,
+   like ``"*.*64*"`` to run test cases containing ``"64"`` in the name inside
+   any test suite::
 
 	./tools/testing/kunit/kunit.py run "*.*64*"
 
