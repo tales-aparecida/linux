@@ -51,8 +51,8 @@ If everything worked correctly, you should see the following:
 The tests will pass or fail.
 
 .. note ::
-   Because it is building a lot of sources for the first time, the
-   ``Building KUnit Kernel`` may take a while.
+   Because it is building a lot of sources for the first time,
+   the ``Building KUnit Kernel`` step may take a while.
 
 For detailed information on this wrapper, see:
 Documentation/dev-tools/kunit/run_wrapper.rst.
