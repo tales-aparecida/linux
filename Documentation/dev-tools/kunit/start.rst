@@ -4,9 +4,9 @@
 Getting Started
 ===============
 
-This page contains an overview about the kunit_tool and Kunit framework,
-teaching how to run existent tests and then how to write a simple test case,
-and covering common problems users face when using Kunit for the first time.
+This page contains an overview of the kunit_tool and KUnit framework,
+teaching how to run existing tests and then how to write a simple test case,
+and covers common problems users face when using KUnit for the first time.
 It is recommended that the reader had compiled the Kernel at least once before.
 
 Installing Dependencies
