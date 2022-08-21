@@ -140,7 +140,7 @@ b. inform the name of a test case prefixed by its test suite,
 
 	./tools/testing/kunit/kunit.py run "example.example_simple_test"
 
-c. use wildcard characters (``*?[``) to run any test case that match the pattern,
+c. use wildcard characters (``*?[``) to run any test case that matches the pattern,
    like ``"*.*64*"`` to run test cases containing ``"64"`` in the name inside
    any test suite::
 
